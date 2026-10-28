@@ -10,7 +10,8 @@ This repository collects Markdown notes covering the topics needed to prepare fo
 
 ```
 claude-foundation-exam-prep/
-└── README.md
+├── README.md
+└── ci-notes.md
 ```
 
 More topic notes will be added as Markdown files.
