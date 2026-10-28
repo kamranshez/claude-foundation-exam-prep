@@ -3,6 +3,8 @@ name: Markdown only
 on:
   push:
   pull_request:
+  # Lets the Daily Lesson workflow start this check on its PR branch
+  workflow_dispatch:
 
 jobs:
   markdown-only:

@@ -16,7 +16,9 @@ jobs:
   add-lesson:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Required to push the new lesson to main
+      contents: write # Push the lesson branch
+      pull-requests: write # Open the lesson PR and enable auto-merge
+      actions: write # Start the markdown-only check on the PR branch
       id-token: write
     steps:
       - name: Checkout repository
@@ -51,7 +53,7 @@ jobs:
             6. Only create or edit .md files. Do not run git; a later step commits for you.
           claude_args: '--allowedTools "Read,Write,Edit,Glob,Grep"'
 
-      - name: Commit and push to main
+      - name: Open a PR and auto-merge it
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -66,5 +68,19 @@ jobs:
             exit 0
           fi
           LESSON=$(git diff --cached --name-only --diff-filter=A -- lessons/ | head -n1)
+          TOPIC=$(basename "${LESSON:-update}" .md)
+          BRANCH="lesson/${TOPIC}-$(date -u +%Y%m%d-%H%M)"
+
+          git checkout -b "$BRANCH"
           git commit -m "docs: add daily lesson ${LESSON:-update}"
-          git push origin main
+          git push origin "$BRANCH"
+
+          gh pr create --base main --head "$BRANCH" \
+            --title "docs: add daily lesson ${TOPIC}" \
+            --body "Automated daily lesson from the Daily Lesson workflow. Merges itself once markdown-only passes."
+
+          # PRs opened by GITHUB_TOKEN don't trigger other workflows, so start the required check by hand
+          gh workflow run markdown-only.yml --ref "$BRANCH"
+
+          # Merge automatically as soon as the required check passes
+          gh pr merge "$BRANCH" --auto --merge --delete-branch
