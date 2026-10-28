@@ -1,0 +1,30 @@
+name: Markdown only
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  markdown-only:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fail if any tracked file is not Markdown
+        run: |
+          # Files allowed even though they are not .md (repo tooling/config)
+          ALLOW='^(\.github/|\.claude/|\.gitignore$|\.gitattributes$)'
+
+          violations=$(git ls-files | grep -vE '\.md$' | grep -vE "$ALLOW" || true)
+
+          if [ -n "$violations" ]; then
+            echo "::error::Only Markdown (.md) files are allowed in this repository."
+            echo "Offending files:"
+            echo "$violations" | while read -r f; do
+              echo "::error file=$f::Not a Markdown file"
+              echo "  - $f"
+            done
+            exit 1
+          fi
+
+          echo "All files are Markdown."
