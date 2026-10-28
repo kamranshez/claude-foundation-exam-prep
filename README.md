@@ -15,6 +15,7 @@ claude-foundation-exam-prep/
 ├── github-actions-and-ci-triggers.md
 └── lessons/
     ├── prompt-caching.md
+    ├── prompt-engineering.md
     └── tool-use.md
 ```
 
@@ -23,6 +24,7 @@ More topic notes will be added as Markdown files.
 ## Lessons
 
 - [Prompt Caching](lessons/prompt-caching.md)
+- [Prompt Engineering](lessons/prompt-engineering.md)
 - [Tool Use](lessons/tool-use.md)
 
 ## How to Use
