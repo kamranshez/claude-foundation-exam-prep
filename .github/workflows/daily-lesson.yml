@@ -1,0 +1,65 @@
+name: Daily Lesson
+
+on:
+  schedule:
+    # 16:00 UTC = 9:00 PM Pakistan Standard Time (UTC+5)
+    - cron: "0 16 * * *"
+  # Adds a "Run workflow" button in the Actions tab for manual testing
+  workflow_dispatch:
+
+# Never run two lesson jobs at the same time
+concurrency:
+  group: daily-lesson
+  cancel-in-progress: false
+
+jobs:
+  add-lesson:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required to push the new lesson to main
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Write today's lesson with Claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You maintain an exam-prep repository for the Claude Foundation exam.
+            Your job right now: add exactly ONE new lesson.
+
+            1. Read README.md and every existing .md file, including everything in lessons/,
+               so you know which topics are already covered.
+            2. Choose the most useful topic for the Claude Foundation exam that is NOT
+               already covered (for example: prompting, tool use, MCP, agents, Claude Code
+               features, hooks, skills, safety, the Claude API, prompt caching).
+            3. Create the lesson at lessons/<topic-name>.md, where <topic-name> is short,
+               lowercase and hyphenated (for example lessons/prompt-caching.md).
+               Never overwrite an existing file.
+            4. Lesson format, matching the style of the existing notes:
+               - A "# Title" heading and a one-line summary
+               - Clear sections with short explanations, tables and examples
+               - A "Key Takeaways" section
+               - A "Practice Questions" section with 3-5 questions and answers
+            5. Update README.md: add the lesson file under the Structure tree and add
+               a link to it in a "## Lessons" list (create that section if it is missing).
+            6. Only create or edit .md files. Do not run git; a later step commits for you.
+          claude_args: '--allowedTools "Read,Write,Edit,Glob,Grep"'
+
+      - name: Commit and push to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes produced; nothing to commit."
+            exit 0
+          fi
+          LESSON=$(git diff --cached --name-only --diff-filter=A -- lessons/ | head -n1)
+          git commit -m "docs: add daily lesson ${LESSON:-update}"
+          git push origin main
