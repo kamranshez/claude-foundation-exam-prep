@@ -12,10 +12,16 @@ This repository collects Markdown notes covering the topics needed to prepare fo
 claude-foundation-exam-prep/
 ├── README.md
 ├── ci-notes.md
-└── github-actions-and-ci-triggers.md
+├── github-actions-and-ci-triggers.md
+└── lessons/
+    └── prompt-caching.md
 ```
 
 More topic notes will be added as Markdown files.
+
+## Lessons
+
+- [Prompt Caching](lessons/prompt-caching.md)
 
 ## How to Use
 
