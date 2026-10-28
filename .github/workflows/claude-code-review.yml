@@ -12,6 +12,9 @@ on:
 
 jobs:
   claude-review:
+    # Skip lesson PRs opened by the Daily Lesson workflow (claude-code-action rejects bot actors)
+    if: github.event.pull_request.user.login != 'github-actions[bot]'
+
     # Optional: Filter by PR author
     # if: |
     #   github.event.pull_request.user.login == 'external-contributor' ||
