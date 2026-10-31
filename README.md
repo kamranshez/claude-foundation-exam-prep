@@ -14,6 +14,7 @@ claude-foundation-exam-prep/
 ├── ci-notes.md
 ├── github-actions-and-ci-triggers.md
 └── lessons/
+    ├── mcp.md
     ├── prompt-caching.md
     ├── prompt-engineering.md
     └── tool-use.md
@@ -23,6 +24,7 @@ More topic notes will be added as Markdown files.
 
 ## Lessons
 
+- [Model Context Protocol (MCP)](lessons/mcp.md)
 - [Prompt Caching](lessons/prompt-caching.md)
 - [Prompt Engineering](lessons/prompt-engineering.md)
 - [Tool Use](lessons/tool-use.md)
