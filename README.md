@@ -14,6 +14,7 @@ claude-foundation-exam-prep/
 ├── ci-notes.md
 ├── github-actions-and-ci-triggers.md
 └── lessons/
+    ├── claude-code-hooks.md
     ├── mcp.md
     ├── prompt-caching.md
     ├── prompt-engineering.md
@@ -24,6 +25,7 @@ More topic notes will be added as Markdown files.
 
 ## Lessons
 
+- [Claude Code Hooks](lessons/claude-code-hooks.md)
 - [MCP](lessons/mcp.md)
 - [Prompt Caching](lessons/prompt-caching.md)
 - [Prompt Engineering](lessons/prompt-engineering.md)
